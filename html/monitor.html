@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+	{{>partials/head}}
+	<link rel="stylesheet" href="css/monitor.css">
+</head>
+<body>
+
+	<script>
+	
+
+		function updateRefClock(){			
+			d=getReferenceTime();
+			if (d!==false){
+				t=twoDigits(d.getHours())+":"+twoDigits(d.getMinutes())+":"+twoDigits(d.getSeconds())+":"+(Math.floor(d.getTime()%1000/100));				
+				$("#refclockSsegDisplay").removeClass("grey").html(t)
+				//$("#huiOffsetDisplay").html(config.hui.serverOffsetToHUI);
+			}
+		}
+	
+		//Go through all devices in the list and update the last-updated field with updated-ago
+		function updateUI_Timers(){
+			for (var deviceUid in config.devices) {				
+		    	//config.devices[deviceUid].updateInfoDivReadAt();
+			}
+		}
+		
+	
+		function groupExists(name){
+			return ($("#groupsContainer .group[data-deviceGroup="+name+"]").length!=0);
+		}
+				
+		//Make sure that all group divs exist (add those that are missing)
+		//Also updates UI for reference time
+		function verifyGroupDivs(){
+			
+			function addGroupByName(name,label,cssClass){
+				if (!label){
+					label=name;
+				}
+				groups.push(name);
+				if ($("#groupsContainer .group[data-deviceGroup="+name+"]").length==0){
+					$("#groupsContainer").append("<div class='group "+cssClass+"' data-deviceGroup='"+name+"'><div class='groupHeaderNoFlex'>"+label+"</div></div>");
+				}				
+			}
+			
+			groups=getGroupsRepresentedInDevices(false);
+			for (var i=0;i<groups.length;i++){
+				if ($("#groupsContainer .group[data-deviceGroup="+groups[i]+"]").length==0){
+					$("#groupsContainer").append("<div class='group' data-deviceGroup='"+groups[i]+"'><div class='groupHeaderNoFlex'>"+groups[i]+"</div></div>");
+				}
+			}
+			//Reference time clock
+			if (!groupExists("refclock")){
+				addGroupByName("refclock","Reference Clock","refclock");
+				var t="<div class='deviceListItem'>"
+					+"		<div class='monitorParamValue ssegDisplay grey' id='refclockSsegDisplay'>00:00:00:0</div>"
+					//+"      <div class='smalltext' id='huiOffsetDisplay'></div>"		
+					+"		<div id='masterTimerContainer'>"
+					+"			<div class='monitorParamValue ssegDisplay grey' id='masterTimerSsegDisplay' >0:00</div>"
+					+"			<div id='masterTimerControls'></div>"
+					+"		</div>"
+					+" </div>";
+				$(getGroupDivSelectorByGroupName("refclock")).append(t);
+			}			
+			
+			
+			//Master timer in reference clock section: maintain copy of the controls for selected timer (including event listeners)			
+			if (config.webSettings && deviceExists(config.webSettings.masterTimer)){				
+				if ($("#masterTimerControls").find(".timerCtrlButtons").attr("data-deviceUid")!=config.webSettings.masterTimer){
+					//Current controls in reference clock/master timer section aren't those of the selected master timer. Replace.
+					$("#masterTimerControls").html("");				
+					//Clone controls from the selected master timer
+					$(config.devices[config.webSettings.masterTimer].getMonitorDIVselector()+" .timerCtrlButtons").clone(true).appendTo("#masterTimerControls");
+					//Attach deviceUid of the master timer to the cloned controls so they can be referenced for the purpose of label updates
+					$("#masterTimerControls").find(".timerCtrlButtons").attr("data-deviceUid",config.webSettings.masterTimer);
+				}
+				//console.log("M: "+$("#masterTimerControls").find(".timerCtrlButtons").attr("data-deviceUid"));
+				$("#masterTimerContainer").show();
+			} else {
+				$("#masterTimerContainer").hide();
+			}
+			
+			//Macro group
+			addGroupByName("macros","macros","macros");
+			//Apply settings: show clocks group?
+			if (config.webSettings){
+				if (config.webSettings.showClocks){
+					$(getGroupDivSelectorByGroupName("clocks")).show();
+				} else {
+					$(getGroupDivSelectorByGroupName("clocks")).hide();				
+				}				
+			}
+		}
+		
+		
+		function verifyDeviceDivs(){
+			for (var deviceUid in config.devices){
+				//Skip ungrouped devices
+				if (config.devices[deviceUid].getGroup()!="_noGroup"){
+					var groupDivSelector=config.devices[deviceUid].getMonitorGroupSelector();
+					if ($(config.devices[deviceUid].getMonitorDIVselector()).length==0){
+						$(groupDivSelector).append("<div class='deviceListItem' data-deviceUid='"+deviceUid+"'></div>");
+					}
+				}
+			}			
+		}
+
+		
+		function getGroupDivSelectorByGroupName(name){
+			return "#groupsContainer .group[data-deviceGroup="+name+"]";
+		}
+		
+		function verifyMacros(){
+			//console.log(config.macros);
+			//$("#macros").html("");
+			var monitorDivSelector,groupDivSelector=getGroupDivSelectorByGroupName("macros");
+			for (let macroId in config.macros){
+				let cssMacroId=macroId.replace(".","\\.");
+				monitorDivSelector=groupDivSelector+" .deviceListItem[data-macroId="+cssMacroId+"]";
+				//console.log("Selector",monitorDivSelector,"Length",$(monitorDivSelector).length);
+				if ($(monitorDivSelector).length==0){
+					//Macro item doesn't exist yet, create unless display property set to false
+					if (!config.macros[macroId].macroRecord.hasOwnProperty("display") || config.macros[macroId].macroRecord.display==true){
+						$(groupDivSelector).append("<div class='deviceListItem' style='color:"+config.macros[macroId].macroRecord.color+";' data-macroId='"+cssMacroId+"'>"+config.macros[macroId].macroRecord.label+"</div>");
+						$(monitorDivSelector).click(function(){
+							//console.log(config.macros[macroId]);
+							if (!config.macros[macroId].macroRecord.requestConfirmation || confirm("Do you wish to run the "+config.macros[macroId].macroRecord.label+" macro?")){
+								//console.log("Confirmed");
+								config.macros[macroId].socket.emit("executeMacro",macroId);
+							};
+						});						
+					}
+				} else {
+					//Macro item exists, verify execIndicator (background color)
+					if (config.macros[macroId].macroRecord.execIndicator===true){
+						$(monitorDivSelector).addClass("bgMacroExecuting");						
+					} else {
+						$(monitorDivSelector).removeClass("bgMacroExecuting");						
+					}
+				}
+			}
+		}
+		
+		$(window).on('load', function() {
+			setInterval(updateUI_Timers,1000);
+
+			setView("monitor");
+			
+			config.hui.updateUI=function(msg,eventName){
+				if (eventName){									
+					if (eventName=="macros"){
+						verifyMacros();
+					} else if (eventName=="devices") {						
+						verifyGroupDivs();
+						verifyDeviceDivs();
+						//msg contains the updated device info - devices not in msg don't need updating
+						for (var deviceUid in msg){
+							config.devices[deviceUid].updateMonitorDiv();
+							//console.log("Updating ",deviceUid);							
+						}										
+					} else if (eventName=="webSettings"){
+						//msg contains settings for the web interface
+						verifyGroupDivs();//applies showClocks parameter
+					}
+				}				
+			}
+			
+			//Start interval to update reference clock
+			setInterval(updateRefClock,50);
+			
+			
+		});
+		
+
+	</script>
+	<div id="nav">
+		{{>partials/navigation}}
+	</div>
+	<div id="groupsContainer">
+	</div>
+	
+</body>
+</html>

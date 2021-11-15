@@ -1,0 +1,14 @@
+{
+	"Amp power":{
+		"inputDevices":[
+			"A3.ds18b20","A4.ds18b20"
+		],
+		"outputDevices":[
+			"A0.relay","A1.led"
+		],
+		"evalModule":"macros/ampPower.js",
+		"triggerSwitches":[
+			"A5.switch"
+		]
+	}
+}

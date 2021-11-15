@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+	{{>partials/head}}
+	<link rel="stylesheet" href="css/editDevice.css">
+</head>
+<body>
+
+	<script>
+	
+		function loadDeviceSelectOptions(){
+			$.get("ajax?a=getDeviceUids",function(data){
+				var sel;
+				for (i in data){
+					//preselect whichever device was specified in the query
+					if (data[i]=='{{query.deviceUid}}'){
+						sel="SELECTED";
+					} else {
+						sel="";
+					}
+					$("#selectDevice").append("<option value='"+data[i]+"' "+sel+">"+data[i]+"</option>");
+				}
+				//Trigger selection
+				$("#selectDevice").change();
+			});
+		}
+		
+		
+		//Delete meta field
+		function metaDelete(param){
+			config.devices[config.hui.selectedDeviceUid].deleteMetaField(param);			
+		}
+
+		//Update meta field
+		function metaUpdate(param){
+			var value=$("#param-"+param+" .metaParamValue input").val();
+			config.devices[config.hui.selectedDeviceUid].setMetaField(param,value);			
+		}
+		
+		//Update config field
+		function configUpdate(param){
+			var value=$("#param-"+param+" .metaParamValue input").val();
+			config.devices[config.hui.selectedDeviceUid].setConfigField(param,value);			
+		}
+		
+		function metaGenerate(){
+			var selectedDeviceUid=$("#selectDevice option:selected").text();
+			var newFieldName=$("#newMetaFieldName").val();
+			var newFieldValue=$("#newMetaFieldValue").val();
+			if (jsonSafe(newFieldName,true).length>0){
+				config.devices[selectedDeviceUid].setMetaField(newFieldName,newFieldValue);
+				$("#newMetaFieldName").val("");
+				$("#newMetaFieldValue").val("");
+			} else {
+				alert("Please enter a valid field name");
+			}				
+		}
+		
+		//Main function to display all the data, including form elements for the meta fields
+		function displayDeviceDataObject(record,depth,category){
+			var thisParam,thisValue;
+			if (!depth) depth=0;
+			if (category=="meta"){
+				//Show the "generate new meta field" form at the top of the meta section
+				$("#data").append("<div class='blackbg'>"
+						+"<div class='metaParamName'>"
+						+"	<input id='newMetaFieldName' placeholder='new field name'>"
+						+"</div>"
+						+"<div class='metaParamValue'>"
+						+"	<input id='newMetaFieldValue' placeholder='value'>"
+						+"  <button onClick='metaGenerate()'id='generateNewField'>generate</button>"
+						+"</div>"
+					+"</div>");				
+			}
+			for (i in record){
+				if (record[i] instanceof Object){
+					$("#data").append("<div class='groupHeader'>"+'&nbsp;'.repeat(depth*2)+i+"</div>");
+					displayDeviceDataObject(record[i],depth+1,i);
+				} else {
+					thisParam=i;
+					thisValue=record[i];
+					if (category=="meta") {
+						$("#data").append("<div id=\"param-"+thisParam+"\">"
+								+"<div class='metaParamName'>"+'&nbsp;'.repeat(depth*2)+thisParam+"</div>"
+								+"<div class='metaParamValue'>"
+								+"	<input value=\""+thisValue+"\">"
+								+"	<button onClick='metaUpdate(\""+thisParam+"\")'>update</button>"
+								+"	<button onClick='metaDelete(\""+thisParam+"\")'>delete</button>"
+								+"</div>"
+							+"</div>");
+						
+					} else if (category=="config") {
+						$("#data").append("<div id=\"param-"+thisParam+"\">"
+								+"<div class='metaParamName'>"+'&nbsp;'.repeat(depth*2)+thisParam+"</div>"
+								+"<div class='metaParamValue'>"
+								+"	<input value=\""+thisValue+"\">"
+								+"	<button onClick='configUpdate(\""+thisParam+"\")'>update</button>"
+								+"</div>"
+							+"</div>");
+						
+					} else {
+						//If error, highlight
+						thisParam=="error" && thisValue ? bgclass="bgError" : bgclass="";
+						$("#data").append("<div class='"+bgclass+"'>"
+								+"<div class='metaParamName'>"+'&nbsp;'.repeat(depth*2)+thisParam+"</div>"
+								+"<div class='metaParamValue'>"+thisValue+"</div>"
+							+"</div>");	
+						bgclass="";
+					}
+				}
+			}			
+		}
+		
+		//Display other data
+		function displayDeviceData(){
+			var deviceUid=config.hui.selectedDeviceUid; //The device currently viewed
+			console.log("Selected: ",config.devices[deviceUid]);
+			if (config.devices[deviceUid]){
+				//Only update the UI if user isn't currently working on an input field
+				if (document.activeElement.tagName.toLowerCase()!="input"){
+					$("#data").html("");			
+					displayDeviceDataObject(config.devices[deviceUid].deviceRecord);					
+				}
+			}			
+		}
+
+		$(function(){
+			
+			loadDeviceSelectOptions();
+			
+			//A device got selected from the dropdown
+			$("#selectDevice").change(function(){
+				config.hui.selectedDeviceUid=$("#selectDevice option:selected").text();
+				displayDeviceData();
+				console.log(config.devices);
+			});
+			
+		})
+		
+		setView("editDevice");
+		config.hui.updateUI=function(msg){
+			var selectedDeviceUid=$("#selectDevice option:selected").text();			
+			//Apply UI update only if the received update pertained to the currently selected device
+			if (msg[selectedDeviceUid]){
+				displayDeviceData();
+			}
+		}
+
+
+	</script>
+	<div id="nav">
+		{{>partials/navigation}}
+	</div>
+	<div id="">
+		<div id="pageHeader">Select device <select id="selectDevice"></select></div>
+		<div id="data"></div>
+	</div>
+</body>
+</html>

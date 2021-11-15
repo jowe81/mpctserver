@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+	{{>partials/head}}
+	<link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+
+	<script>
+		$(window).on('load', function() {
+
+			
+			setView("settings");			
+
+			
+		})
+
+	</script>
+	<div id="nav">
+		{{>partials/navigation}}
+	</div>
+	<div id="settingsContainer">
+		<div class="settingsGroup">
+			<div class="settingGroupHeader">Time</div>
+			<div class="setting">
+				<div class="settingLabel"></div>
+				Select master timer				
+				<div class="settingControl">
+					<select id="sbMasterTimer">
+						<option>ESPA</option>
+						<option>ESPB</option>
+						<option>ESPC</option>
+					</select>
+				</div>
+			</div>
+			<div class="setting">
+				<div class="settingLabel"></div>
+				<div class="settingControl">
+					<input type="checkbox" id="cbShowClocks" value="">Show device group CLOCKs<br>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script>
+
+
+	$(window).on('load',function(){
+		
+		function updateSessionSetting(name,value){
+			payload=JSON.stringify({ paramName: name, paramValue: value });
+			this.socket.emit('updateSessionSetting',payload);
+			console.log(payload);
+		}
+		
+		function updateUI_sbMasterTimer(){
+			if (config.webSettings && config.webSettings.masterTimer){
+				$("#sbMasterTimer").val(config.webSettings.masterTimer);						
+			} else {
+				$("#sbMasterTimer").val("none");
+			}			
+		}
+
+		$("#cbShowClocks").click(function(){
+			updateSessionSetting("showClocks",$(this).is(":checked"));			
+		});
+		
+		$("#sbMasterTimer").change(function(){
+			updateSessionSetting("masterTimer",$("#sbMasterTimer").val());
+		});
+
+		config.hui.updateUI=function(msg,eventName){
+			if (eventName){									
+				if (eventName=="webSettings"){
+					//msg contains settings for the web interface - apply
+					$("#cbShowClocks").prop("checked",config.webSettings.showClocks);
+					updateUI_sbMasterTimer(); //select current master timer
+					
+				} else if (eventName=="devices"){
+					console.log(config.devices);
+					$("#sbMasterTimer").html("<option value='none'>none</option>");
+					for (var device in config.devices){
+						if (config.devices[device].type=="clockTimer"){
+							$("#sbMasterTimer").append('<option value="'+device+'">'+device+'</option>');							
+						}
+					}
+					updateUI_sbMasterTimer(); //(re)select the current master timer after filling the list
+				}
+			}				
+		}
+		
+	});
+
+	
+	
+</script>

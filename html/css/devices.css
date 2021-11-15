@@ -1,0 +1,62 @@
+body {
+	font-family:Arial,sans-serif;	
+	font-size:12pt;
+}
+
+.deviceListItem {
+	width:300px;
+	border:1px solid gray;
+	margin:15px;
+	padding:5px;
+	border-radius:5px;
+	background:gray;
+	color:white;
+}
+
+.deviceListItem td {
+	padding:5px;
+	border-radius:3px;
+}
+
+
+
+.deviceListItem table {
+	background:navy;
+	width:100%;
+	color:#CCCCFF;
+	padding:5px;
+}
+
+.deviceListItem table tr:nth-child(odd){
+	background:rgba(0,0,255,.5);
+	color:gray;
+}
+
+.deviceListItem table tr:nth-child(even){
+	color:white;
+	font-weight:bold;
+}
+
+.deviceListItem .deviceData button {
+	margin-left:20px;
+	float:right;
+	min-width:120px;	
+}
+
+
+.deviceListItem .deviceDivHeader .deviceName {
+	float:left;
+	width:120px;
+}
+
+.deviceListItem .deviceDivHeader .devicePhysical,.readAt,.deviceUid {
+	float:right;
+	clear:right;
+	font-size:80%;
+}
+
+
+.deviceError{
+	clear:both;
+	font-size:80%;
+}

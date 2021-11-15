@@ -1,0 +1,106 @@
+{
+	"paUp":{
+		"label":"Power up PA",
+		"scriptFile":"macroScripts/audPaUp.js",
+		"triggerSwitches":["ESPI3.switch"]
+		,
+		"color":"lime",
+		"requestConfirmation":false,
+		"targetConditions":{
+		},
+		"prohibitedConcurrentMacros":["paDown"]		
+	},
+	"paDown":{
+		"label":"Power down PA",
+		"scriptFile":"macroScripts/audPaDown.js",
+		"triggerSwitches":[
+			"ESPI4.switch"
+		],
+		"color":"red",
+		"requestConfirmation":true,
+		"targetConditions":{
+		},
+		"prohibitedConcurrentMacros":["paUp"]		
+	},
+
+        "projectorsUp":{
+                "label":"Turn on projectors",
+                "scriptFile":"macroScripts/audProjectorsUp.js",
+                "triggerSwitches":["ESPE2.switch"],
+                "color":"lime",
+                "requestConfirmation":false
+        },
+	"projectorsDown":{
+		"label":"Turn off projectors",
+		"scriptFile":"macroScripts/audProjectorsDown.js",
+		"triggerSwitches":["ESPE1.switch"],
+		"color":"red",
+		"requestConfirmation":true
+	},
+
+	"toggleTimerAuditorium":{
+		"label":"Toggle auditorium timer",
+		"scriptFile":"macroScripts/audTimerToggle.js",
+		"triggerSwitches":["ESPI1.switch"],
+		"color":"red",
+		"display":false,
+		"requestConfirmation":false
+	},
+	"subtractTimerAuditorium":{
+		"label":"Subtract auditorium timer",
+		"scriptFile":"macroScripts/audTimerSubtract.js",
+		"triggerSwitches":["ESPI2.switch"],
+		"color":"red",
+		"display":false,
+		"requestConfirmation":false
+	},
+
+
+        "toggleTimerGym":{
+                "label":"Add to gym timer",
+                "scriptFile":"macroScripts/gymTimerAdd.js",
+                "triggerSwitches":["ESPH1.switch"],
+                "color":"red",
+                "display":false,
+                "requestConfirmation":false
+        },
+        "subtractTimerGym":{
+                "label":"Clear gym timer",
+                "scriptFile":"macroScripts/gymTimerClear.js",
+                "triggerSwitches":["ESPH2.switch"],
+                "color":"red",
+                "display":false,
+                "requestConfirmation":false
+        },
+
+        "gymProjectorUp":{
+                "label":"Turn on gym projector",
+                "scriptFile":"macroScripts/gymProjectorUp.js",
+                "triggerSwitches":["ESPH3.switch"],
+                "color":"lime",
+                "requestConfirmation":false
+        },
+        "gymProjectorDown":{
+                "label":"Turn off gym projector",
+                "scriptFile":"macroScripts/gymProjectorDown.js",
+                "triggerSwitches":["ESPH4.switch"],
+                "color":"red",
+                "requestConfirmation":true
+        },
+
+        "uehProjectorUp":{
+                "label":"Turn on UEH projector",
+                "scriptFile":"macroScripts/uehProjectorUp.js",
+                "triggerSwitches":["ESPG2.switch"],
+                "color":"lime",
+                "requestConfirmation":false
+        },
+        "uehProjectorDown":{
+                "label":"Turn off UEH projector",
+                "scriptFile":"macroScripts/uehProjectorDown.js",
+                "triggerSwitches":["ESPG1.switch"],
+                "color":"red",
+                "requestConfirmation":true
+        }       
+	
+}

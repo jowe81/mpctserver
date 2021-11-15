@@ -1,0 +1,33 @@
+#meta,#data {
+	padding:5px;
+}
+
+.metaParamName{
+	width:180px;
+	color:#DDD;
+ 	padding:5px;
+	display:inline-block;
+}
+
+.metaParamValue{
+	display:inline-block;
+}
+
+.metaParamValue input, .metaParamName input{
+	width:120px;	
+	border:none;
+	padding:3px;
+}
+
+#newMetaContainer{
+	background:black;
+	color:red;
+	padding:5px;
+}
+
+.groupHeader{
+	background:navy;
+	color:white;
+	padding:5px;
+	
+}

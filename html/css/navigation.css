@@ -1,0 +1,40 @@
+#nav {
+	position:fixed;
+	top:0px;
+	width:100%;
+}
+
+#nav ul {
+	list-style:none;
+	background:#333;
+	color:white;
+	height:auto;
+	margin:0px;
+	padding:10px;
+	padding-left:0px;
+	border-bottom:1px solid gray;
+}
+
+#nav li {
+	display:inline-block;
+	padding:0px;
+}
+
+
+#nav a{
+	text-decoration:none;
+	padding:10px;
+}
+
+#nav a:link,a:visited {
+	color:#AAA;
+}
+
+#nav a:hover,a:active {
+	color:yellow;
+}
+
+.nav_highlighted {
+	background:#bbb;
+	color:white !important;
+}

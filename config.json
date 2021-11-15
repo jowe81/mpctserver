@@ -1,0 +1,9 @@
+{
+	"controller":{
+		"mpctClientType":"mpctServer",
+		"mqttNamespace":"mpct/",
+		"mqttBrokerAddress":"mqtt://localhost",
+		"httpServerPort":32800,
+		"systemTimeBroadcastInterval":7200
+	}
+}

@@ -1,0 +1,29 @@
+#settingsContainer {
+	display:flex;	
+}
+
+.settingsGroup{
+	margin:10px;
+	padding:5px;
+	width:100%;		
+}
+
+.settingGroupHeader{
+	margin-bottom:10px;
+	font-size:120%;
+	font-weight:bold;
+	width:100%;
+}
+
+.setting{
+	padding:5px;
+}
+
+.settingLabel{
+	padding:5px;
+	font-style:italic;
+}
+
+.settingControl{
+	padding:5px;
+}

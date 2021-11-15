@@ -1,0 +1,130 @@
+#groupsContainer {
+	padding:5px;
+	display:flex;
+	flex-flow:column wrap;
+	justify-content:flex-start;
+	align-content:flex-start;
+	height:100%;
+}
+
+.group{
+	background:#333399;
+	padding:10px;
+	margin:10px;
+	border-radius:5px;
+	width:200px;
+	text-transform:uppercase;
+	font-weight:bold;
+	color:rgba(255,255,255,.4);
+	flex-flow:row wrap;
+	display:flex;
+	justify-content:top;
+	align-items:flex-start;
+	overflow:auto;
+}
+
+.macros{
+	background:#335533;
+	user-select:none;
+	order:-1;
+}
+
+.refclock{
+	background:#772222;
+	user-select:none;
+	order:-2;
+}
+
+.bgMacroExecuting{
+	background:#888811 !important;
+	color:white !important;
+	border:1px dotted red !important;
+}
+
+.groupHeaderNoFlex{
+	flex: 0 0 100%;
+}
+
+.deviceListItem {
+	width:170px;
+	border:1px solid gray;
+	margin:7px;
+	padding:5px;
+	border-radius:5px;
+	background:rgba(0,0,0,.3);
+	text-transform:none;
+	font-weight:normal;	
+	color:white;
+}
+
+.monitorParamName{
+	width:100%;
+	color:#DDD;
+ 	padding:5px;
+ 	font-size:80%;
+}
+
+.monitorParamValue{
+	user-select:none;
+	width:100%;
+ 	padding:5px;
+ 	color:white;
+ 	background:rgba(255,255,255,.3);
+	border-radius:4px;
+	margin:2px 0px;
+}
+
+
+.monitorHalfButtonL{
+	width:50%;
+	background:#403020;
+	float:left;
+	padding:5px;
+	margin:1px 0px;
+	border-top-left-radius:4px;
+	border-bottom-left-radius:4px;
+	border-right:1px solid rgba(0,0,0,.3);
+	text-align:center;
+}
+
+.monitorHalfButtonR{
+	width:50%;
+	background:#403020;
+	float:left;
+	padding:5px;
+	margin:1px 0px;
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+	border-left:1px solid rgba(0,0,0,.3);
+	text-align:center;
+}
+
+.noPadding{
+	padding:0px !important;
+}
+
+.noMargin {
+	margin:0px !important;
+}
+
+.clock {
+	background:rgba(100,40,40,.8);
+	font-size:120%;
+	text-align:center;
+}
+
+.ssegDisplay{
+	font-size:200%;
+	background:rgba(0,0,0,.8);
+	color:red;
+	text-align:center;
+}
+
+.rtc {
+	background:rgba(20,20,20,.4);
+	color:#AAA;
+	font-size:80%;	
+	text-align:right;
+	padding:0px 2px;
+}
+

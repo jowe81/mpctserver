@@ -1,0 +1,19 @@
+{
+        "author": "Johannes Weber",
+        "name": "mpctserver",
+        "version": "0.1.0",
+        "description": "Server for MPCT - PowerControl via MQTT",
+        "dependencies": {
+                "body-parser": "latest",
+                "connect-mongodb-session": "latest",
+                "cookie-parser": "latest",
+                "express": "latest",
+                "express-session": "latest",
+                "jade": "latest",
+                "lodash": "latest",
+                "mongoose": "latest",
+                "mqtt": "latest",
+                "pug": "^2.0.3",
+                "socket.io": "latest"
+        }
+}
