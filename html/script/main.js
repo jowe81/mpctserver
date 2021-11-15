@@ -27,6 +27,8 @@ function updateDeviceData(msg){
 				config.devices[deviceUid]=new Mpct_projector(msg[deviceUid],config,socket);
 			} else if (msg[deviceUid].physical.type=="clockTimer"){
 				config.devices[deviceUid]=new Mpct_clockTimer(msg[deviceUid],config,socket);
+			} else if (msg[deviceUid].physical.type=="sim_switch"){
+				config.devices[deviceUid]=new Mpct_switch(msg[deviceUid],config,socket);
 			}
 		}
 		//Hopefully the device Object exists now. Update data.
