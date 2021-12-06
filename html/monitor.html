@@ -96,8 +96,8 @@
 		
 		function verifyDeviceDivs(){
 			for (var deviceUid in config.devices){
-				//Skip ungrouped devices
-				if (config.devices[deviceUid].getGroup()!="_noGroup"){
+				//Skip ungrouped devices (_noGroup) and those in other invisible groups (starting with _)
+				if (config.devices[deviceUid].getGroup().substr(0,1)!="_"){
 					var groupDivSelector=config.devices[deviceUid].getMonitorGroupSelector();
 					if ($(config.devices[deviceUid].getMonitorDIVselector()).length==0){
 						$(groupDivSelector).append("<div class='deviceListItem' data-deviceUid='"+deviceUid+"'></div>");
