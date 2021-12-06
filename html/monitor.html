@@ -35,6 +35,7 @@
 		function verifyGroupDivs(){
 			
 			function addGroupByName(name,label,cssClass){
+        if (!name.substr(0,1)==="_") return; //Ignore invisible groups (starting with _)
 				if (!label){
 					label=name;
 				}
