@@ -99,7 +99,7 @@ function getGroupsRepresentedInDevices(){
 	var groups=[];
 	for (deviceUid in config.devices){
 		group=config.devices[deviceUid].getGroup();
-		if (group!="_noGroup"){
+		if (group.substr(0,1)!="_"){ //Ignore hidden groups (starting with _)
 			addOnce(groups,group);
 		}
 	}
